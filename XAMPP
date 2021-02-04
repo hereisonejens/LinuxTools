@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Tool to start and stop XAMPP.
+# Requirements: whiptail (sudo apt-get install whiptail), XAMPP (latest version)
+# GitHub-Repo: https://github.com/hereisonejens/LinuxTools
+# Script-Version: 1.0 (February 4th 2021)
+
+clear
+sudo -k
+password=$(whiptail --passwordbox "Please enter your password" 8 50 --title "Authentication" 3>&1 1>&2 2>&3)
+echo $password | sudo -v -S
+while [ 1 ]
+do
+CHOICE=$(
+whiptail --title "What do you want to do?" --menu "" 10 50 3 \
+	"START" "Start XAMPP"   \
+	"STOP" "Stop XAMPP"  \
+	"[X]" "Exit script" 3>&2 2>&1 1>&3
+)
+case $CHOICE in
+	"START")
+		echo ""
+		echo "// Tool for XAMPP: Trying to start XAMPP //"
+		output=$(sudo /opt/lampp/lampp start)
+		whiptail --msgbox "Output:\n\n$output" 20 70
+	;;
+	"STOP")
+		echo ""
+		echo "// Tool for XAMPP: Trying to stop XAMPP //"
+	  output=$(sudo /opt/lampp/lampp stop)
+		whiptail --msgbox "Output:\n\n$output" 20 70
+	;;
+
+	"[X]")
+		clear
+		exit
+	;;
+esac
+done
+exit
