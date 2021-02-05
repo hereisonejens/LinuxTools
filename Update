@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Tool to update your device
+# Requirements: whiptail (sudo apt-get install whiptail)
+# GitHub-Repo: https://github.com/hereisonejens/LinuxTools
+# Script-Version: 1.0 (February 5th 2021)
+
+sudo -k
+password=$(whiptail --passwordbox "Please enter your password" 8 50 --title "Authentication" 3>&1 1>&2 2>&3)
+echo $password | sudo -v -S
+
+whiptail --title "What do you want to do?" --checklist --separate-output "" 10 68 5 \
+"Lists" "Update your package lists" on \
+"Packages" "Update your packages" on \
+"Autoremove" "Remove packages that are no longer needed" on 2>results
+
+while read choice
+do
+        case $choice in
+                Lists) sudo apt-get update
+                ;;
+                Packages) sudo apt-get upgrade
+                ;;
+                Autoremove) sudo apt autoremove
+                ;;
+                *)
+                ;;
+        esac
+done < results
